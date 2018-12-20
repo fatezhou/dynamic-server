@@ -1,14 +1,24 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "lockfileVersion": 1,
+  "requires": true,
+  "dependencies": {
+    "node-cookie": "^2.1.1"
+  },
   "main": "CuteApi.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatezhou/dynamic-server.git"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "node-cookie": "^2.1.1"
-  }
+  "bugs": {
+    "url": "https://github.com/fatezhou/dynamic-server/issues"
+  },
+  "homepage": "https://github.com/fatezhou/dynamic-server#readme",
+  "description": ""
 }
