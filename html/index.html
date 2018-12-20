@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <script src="./../js/checkUser.js"></script>
+        <script src="./../js/vue.js"></script>
+        <script src="./../js/vue-resourse.js"></script>
+    </head>
+    <body>    
+        <div id="main">
+            <div id="header">
+                {{header}}
+            </div>
+            <div id="middle">                
+                {{middle}}
+            </div>
+            <div id="footer">    
+                {{footer}}
+            </div>
+        </div>            
+        <script>
+            var vue = new Vue({
+                el:"#main",
+                data(){
+                    return {
+                        header:"",
+                        middle:"",
+                        footer:""
+                    }
+                },
+                methods:{
+                    init:function(){
+                        this.$http.get('/api/v1.0/getHeader').then(function(res){
+                            this.header = res.body;
+                        },function(res){
+                            // this.header = res.body;
+                            //fail
+                        });
+
+                        this.$http.get("/api/v1.0/getMiddle").then(function(res){
+                            this.middle = res.body;
+                        }, function(res){
+
+                        });
+
+                        this.$http.get("/api/v1.0/getFooter").then(function(res){
+                            this.middle = res.body;
+                        }, function(res){
+
+                        });
+                    }
+                }
+            });
+            vue.init();
+        </script>
+    </body>
+</html>
