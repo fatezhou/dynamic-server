@@ -1,51 +1,53 @@
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="./../js/checkUser.js"></script>
         <script src="./../js/vue.js"></script>
         <script src="./../js/vue-resourse.js"></script>
+        <script src="./../js/jquery.js"></script>
+        <!-- 新 Bootstrap4 核心 CSS 文件 -->
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">                
+        <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>          
     </head>
     <body>    
         <div id="main">
-            <div id="header">
-                {{header}}
-            </div>
-            <div id="middle">                
-                {{middle}}
-            </div>
-            <div id="footer">    
-                {{footer}}
-            </div>
+            <title>{{title}}</title>
+            <div id="header"></div>
+            <div id="middle"></div>
+            <div id="footer"></div>
         </div>            
         <script>
             var vue = new Vue({
                 el:"#main",
-                data(){
-                    return {
-                        header:"",
-                        middle:"",
-                        footer:""
-                    }
+                data:{                   
+                        title:""
                 },
                 methods:{
                     init:function(){
-                        this.$http.get('/api/v1.0/getHeader').then(function(res){
-                            this.header = res.body;
+                        this.$http.get('/html/header.html').then(function(res){                            
+                            $("#header").html(res.bodyText);
                         },function(res){
                             // this.header = res.body;
                             //fail
                         });
-
-                        this.$http.get("/api/v1.0/getMiddle").then(function(res){
-                            this.middle = res.body;
+                        this.$http.get("/html/middle.html").then(function(res){                  
+                            $("#middle").html(res.bodyText);
                         }, function(res){
 
                         });
-
-                        this.$http.get("/api/v1.0/getFooter").then(function(res){
-                            this.middle = res.body;
+                        this.$http.get("/html/footer.html").then(function(res){                  
+                            $("#footer").html(res.bodyText);
                         }, function(res){
 
-                        });
+                        });    
+                        this.$http.get("/api/v1/title").then(function(res){
+                            this.title = res.bodyText;
+                        }, function(res){
+
+                        });                    
                     }
                 }
             });

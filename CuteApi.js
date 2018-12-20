@@ -16,7 +16,6 @@ function CuteApi(){
         }
 
         // console.info(nodeCookie.parse(req));
-
         // nodeCookie.create(res, 'user', 'admin');
         // nodeCookie.create(res, 'token', '123456');
 
@@ -30,8 +29,9 @@ function CuteApi(){
                 res.writeHead(200, {"content-type" : "text/html;charset='utf-8'"});
                 res.write(response.OnSucc(param));
             }catch(err){
-                res.writeHead(200, {"content-type" : "text/html;charset='utf-8'"});
+                res.writeHead(500, {"content-type" : "text/html;charset='utf-8'"});
                 res.write(response.OnBadParam({}));
+                //res.write("<span>1234</span><script>console.info(44444444);</script>")
             }            
             res.end();
         })

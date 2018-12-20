@@ -17,6 +17,7 @@ exports.GetContentType = function(ext){
         ".pdf":"application/pdf" ,
         ".ppt":"application/vnd.ms-powerpoint" ,
         ".pptx":"application/vnd.openxmlformats-officedocument.presentationml.presentation" ,
+        ".png":"image/png",
         ".ttf":"application/octet-stream" ,
         ".wav":"audio/x-wav" ,
         ".wpt":"x-lml/x-gps" ,
