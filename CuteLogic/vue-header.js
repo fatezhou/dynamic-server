@@ -5,16 +5,24 @@ var vue = new Vue(
             return {
                 list:[
                     {
-                        text:"one"
+                        text:"one",
+                        clickParam:"/one"
                     },
                     {
-                        text:"two"
+                        text:"two",
+                        clickParam:"/two"
                     },
                     {
-                        text:"three"
+                        text:"three",
+                        clickParam:"/three"
                     }
                 ],
                 show: false
+            }
+        },
+        methods:{
+            click_vue_header:function(i){
+                console.info(i);
             }
         }
     }
