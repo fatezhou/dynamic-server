@@ -4,6 +4,8 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
+    "crypto": "^1.0.1",
+    "mysql": "^2.16.0",
     "node-cookie": "^2.1.1"
   },
   "main": "CuteApi.js",

@@ -6,6 +6,16 @@ const ContentType = require("./CuteContent-type.js");
 const Cmd = require("./CuteCmd.js");
 const CuteApi = require("./CuteApi.js");
 
+const sqlCfg = {
+    host: '127.0.0.1',
+    user: 'user',
+    password: 'password',
+    database: 'db',
+    port: 3306
+};
+
+
+
 
 http.createServer(function(req, res){
     var reqUrl = req.url;

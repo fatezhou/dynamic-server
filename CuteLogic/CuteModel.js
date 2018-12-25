@@ -1,6 +1,8 @@
 
+
+
 function CuteModel(){
-    this.Do = function(name, version, paramObject){
+    this.Do = function(name, version, paramObject, callback){
         
     }
 }

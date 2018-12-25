@@ -1,6 +1,7 @@
 const url = require('url');
 const CuteResponse = require('./CuteResponse.js')
 const nodeCookie = require('node-cookie')
+const CuteModel = require('./CuteLogic/CuteModel.js')
 
 function CuteApi(){
     this.router = function(req, res){
@@ -26,14 +27,19 @@ function CuteApi(){
         req.on('end', function(){
             try{
                 let param = JSON.parse(data);
-                res.writeHead(200, {"content-type" : "text/html;charset='utf-8'"});
-                res.write(response.OnSucc(param));
+
+                let cuteModel = new CuteModel;
+                cuteModel.Do(arr[3], arr[2], param, function(ModelData){
+                    res.writeHead(200, {"content-type" : "text/html;charset='utf-8'"});
+                    res.write(JSON.stringify(ModelData));
+                    res.end();
+                });                         
             }catch(err){
                 res.writeHead(500, {"content-type" : "text/html;charset='utf-8'"});
                 res.write(response.OnBadParam({}));
-                //res.write("<span>1234</span><script>console.info(44444444);</script>")
+                res.end();
             }            
-            res.end();
+            
         })
     }
 }
