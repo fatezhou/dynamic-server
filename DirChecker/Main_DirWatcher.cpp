@@ -6,6 +6,9 @@
 #include "Reporter.h"
 #include "Config.h"
 
+
+Config cfg;
+
 class CMyWatcher : public CDirWatcher{
 public:
 	CMyWatcher() : CDirWatcher(){
@@ -38,6 +41,18 @@ public:
 		default:
 			sprintf(szBuffer, "<div><h3>%s[其他错误]: %s</h3></div>", GetTimeStr().c_str(), pFilePath);
 			break;
+		}
+		printf("%s\n", szBuffer);
+		string strPath = pFilePath;
+		if (strPath.find("\\") <= strPath.find(".")){
+			return;
+		}
+		vector<string> vecFliter = cfg.GetFliter();		
+		for (auto iter = vecFliter.begin(); iter != vecFliter.end(); iter++){
+			if (strstr(pFilePath, iter->c_str()) != NULL){
+				printf("在过滤行列, 不处理");
+				return;
+			}
 		}
 		Push(szBuffer);
 	};
@@ -104,19 +119,22 @@ private:
 };
 
 int main(){
-	Config cfg;
 	cfg.Load();
-
 	cfg.GetEmails();
-
 	CEmailReporter* pEmailReport = new CEmailReporter;
-	pEmailReport->SetUserInfo("81758624@qq.com", "hoqaduzkavthbhcb", "smtp.qq.com");
+	//pEmailReport->SetUserInfo("81758624@qq.com", "hoqaduzkavthbhcb", "smtp.qq.com");
+	pEmailReport->SetUserInfo(cfg.GetUser().c_str(), cfg.GetPassword().c_str(), cfg.GetSMTP().c_str());
+	vector<string> vecEmails = cfg.GetEmails();
+	for (auto iter = vecEmails.begin(); iter != vecEmails.end(); iter++){
+		pEmailReport->AddToReportAddr(iter->c_str());
+	}
+/*
 	pEmailReport->AddToReportAddr("927136570@qq.com");
 	pEmailReport->AddToReportAddr("1490533119@qq.com");
 	pEmailReport->AddToReportAddr("516039216@qq.com");
-	//pEmailReport->Report("<h1>这是一封测试用的邮件</h1>");
+	*///pEmailReport->Report("<h1>这是一封测试用的邮件</h1>");
 	CMyWatcher* pWatcher = new CMyWatcher;
 	pWatcher->SetReporter(pEmailReport);
-	pWatcher->Watch("d:/12345");
+	pWatcher->Watch(cfg.GetDir().c_str());
 	return system("pause");		 
 }

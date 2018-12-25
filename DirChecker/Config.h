@@ -18,10 +18,11 @@ public:
 	std::string GetUser();
 	std::string GetPassword();
 	std::string GetDir();
+	std::string GetSMTP();
 	vector<std::string> GetEmails();
 	vector<std::string> GetFliter();
 
 private:
-	std::string strUser, strPassword, strDir, strEmail, strFilterDir;
+	std::string strUser, strPassword, strDir, strEmail, strFilterDir, strSMTP;
 };
 

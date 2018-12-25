@@ -29,6 +29,9 @@ void Config::Load()
 
 	GetPrivateProfileStringA("set", "fliter", "", sz, 1024, strPath.c_str());
 	strFilterDir = sz;
+
+	GetPrivateProfileStringA("set", "smtp", "smtp.qq.com", sz, 1024, strPath.c_str());
+	strSMTP = sz;
 }
 
 std::string Config::GetUser()
@@ -44,6 +47,11 @@ std::string Config::GetPassword()
 std::string Config::GetDir()
 {
 	return strDir;
+}
+
+std::string Config::GetSMTP()
+{
+	return strSMTP;
 }
 
 vector<std::string> Config::GetEmails()

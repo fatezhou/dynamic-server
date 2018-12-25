@@ -23,7 +23,8 @@ function CuteLogin(version, paramObject, callback){
                             if(insertTokenRes.error){
                                 callback(response.OnBadSQL({}));
                             }else{
-                                callback(response.OnSucc({token:token}));
+                                nodeCookie.create(paramObject.res, 'token', token);
+                                callback(response.OnSucc({token:token, uid:res.res[0].id}));
                             }
                         });
                     }
@@ -34,6 +35,6 @@ function CuteLogin(version, paramObject, callback){
 
 module.exports = CuteLogin;
 
-CuteLogin("", {user:"fatezhou", password:"123456"}, function(res){
-    console.info(res)
-})
+// CuteLogin("", {user:"fatezhou", password:"123456"}, function(res){
+//     console.info(res)
+// })
