@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 #include "Reporter.h"
+#include "Config.h"
 
 class CMyWatcher : public CDirWatcher{
 public:
@@ -103,6 +104,11 @@ private:
 };
 
 int main(){
+	Config cfg;
+	cfg.Load();
+
+	cfg.GetEmails();
+
 	CEmailReporter* pEmailReport = new CEmailReporter;
 	pEmailReport->SetUserInfo("81758624@qq.com", "hoqaduzkavthbhcb", "smtp.qq.com");
 	pEmailReport->AddToReportAddr("927136570@qq.com");
