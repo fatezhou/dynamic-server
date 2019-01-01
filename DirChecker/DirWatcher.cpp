@@ -46,7 +46,7 @@ void CDirWatcher::Watch(const char* pDir)
 			pNotify,
 			sizeof(buf) - 2,
 			true,
-			FILTER_FILE_NAME | FILTER_DIR_NAME | FILTER_LAST_WRITE_NAME,
+			FILTER_FILE_NAME | /*FILTER_DIR_NAME | */FILTER_LAST_WRITE_NAME,
 			&dw,
 			NULL,
 			NULL

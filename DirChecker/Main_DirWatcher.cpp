@@ -43,10 +43,6 @@ public:
 			break;
 		}
 		printf("%s\n", szBuffer);
-		string strPath = pFilePath;
-		if (strPath.find("\\") <= strPath.find(".")){
-			return;
-		}
 		vector<string> vecFliter = cfg.GetFliter();		
 		for (auto iter = vecFliter.begin(); iter != vecFliter.end(); iter++){
 			if (strstr(pFilePath, iter->c_str()) != NULL){
@@ -76,7 +72,7 @@ public:
 			for (int i = 0; i < nSize; i++){
 				strText += vec[i];
 			}
-			pReporter->Report(strText);
+			//pReporter->Report(strText);
 		}
 		::LeaveCriticalSection(&cs);
 	};

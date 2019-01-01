@@ -19,10 +19,11 @@ public:
 	std::string GetPassword();
 	std::string GetDir();
 	std::string GetSMTP();
+	std::string GetReportDoProcessCmd();
 	vector<std::string> GetEmails();
 	vector<std::string> GetFliter();
 
 private:
-	std::string strUser, strPassword, strDir, strEmail, strFilterDir, strSMTP;
+	std::string strUser, strPassword, strDir, strEmail, strFilterDir, strSMTP, strProcessCmd;
 };
 

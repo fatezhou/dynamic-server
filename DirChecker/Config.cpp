@@ -32,6 +32,9 @@ void Config::Load()
 
 	GetPrivateProfileStringA("set", "smtp", "smtp.qq.com", sz, 1024, strPath.c_str());
 	strSMTP = sz;
+
+	GetPrivateProfileStringA("set", "cmd", "", sz, 1024, strPath.c_str());
+	strProcessCmd = sz;
 }
 
 std::string Config::GetUser()
@@ -77,6 +80,11 @@ std::string GetDir()
 		strPath = sz;
 	}
 	return strPath;
+}
+
+std::string Config::GetReportDoProcessCmd()
+{
+	return this->strProcessCmd;
 }
 
 vector<std::string> Split(string strSrc, string strDeli)

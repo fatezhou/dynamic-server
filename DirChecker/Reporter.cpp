@@ -4,6 +4,8 @@
 
 using namespace std;
 
+extern std::string GetDir();
+
 struct Base64Date6
 {
 	unsigned int d4 : 6;
@@ -104,6 +106,7 @@ IReporter::IReporter()
 IReporter::~IReporter()
 {
 }
+
 
 
 
@@ -263,4 +266,31 @@ void CEmailReporter::SetUserInfo(const char* pUser, const char* pPassword, const
 void CEmailReporter::AddToReportAddr(const char* pEmailAddredss)
 {
 	vecEmail.push_back(pEmailAddredss);
+}
+
+void CEmailReporter::SetCmdAfterReport(const std::string& strCmd)
+{
+	this->strCmd = strCmd;
+}
+
+void CEmailReporter::AfterReport()
+{
+	if (strCmd.empty()){
+		return;
+	}
+
+	STARTUPINFOA si = { 0 };
+	PROCESS_INFORMATION pi = { 0 };
+
+	string strProcess = "cmd /c ";
+	strProcess += GetDir().c_str();
+	strProcess += "\\" + strCmd;
+
+	CreateProcessA(NULL,
+		(char*)strProcess.c_str(),
+		NULL, NULL, false,
+		0, NULL, NULL,
+		&si,
+		&pi
+		);
 }
