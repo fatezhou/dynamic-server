@@ -72,7 +72,7 @@ public:
 			for (int i = 0; i < nSize; i++){
 				strText += vec[i];
 			}
-			//pReporter->Report(strText);
+			pReporter->Report(strText);
 		}
 		::LeaveCriticalSection(&cs);
 	};

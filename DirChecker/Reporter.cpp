@@ -254,6 +254,8 @@ void CEmailReporter::Report(std::string strText)
 
 	//清理工作
 	closesocket(sockfd);
+
+	AfterReport();
 }
 
 void CEmailReporter::SetUserInfo(const char* pUser, const char* pPassword, const char* pSmtp)
