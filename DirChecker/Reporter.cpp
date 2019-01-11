@@ -83,7 +83,7 @@ void EncodeBase64(char   *dbuf, char *buf128, int len){
 //void SendMail(char   *email, char *body);
 int OpenSocket(struct sockaddr *addr){
 	int sockfd = 0;
-	sockfd = socket(PF_INET, SOCK_STREAM, 0);
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{
 		cout << "Open sockfd(TCP) error!" << endl;
@@ -91,7 +91,8 @@ int OpenSocket(struct sockaddr *addr){
 	}
 	if (connect(sockfd, addr, sizeof(struct sockaddr)) < 0)
 	{
-		cout << "Connect sockfd(TCP) error!" << endl;
+		cout << "Connect sockfd(TCP) error!, errorCode:" << GetLastError() << endl;
+		
 		exit(-1);
 	}
 	return sockfd;
@@ -127,10 +128,10 @@ void CEmailReporter::Report(std::string strText)
 	memset(&their_addr, 0, sizeof(their_addr));
 
 	their_addr.sin_family = AF_INET;
-	their_addr.sin_port = htons(25);
+	their_addr.sin_port = htons(587);
 	hostent* hptr = gethostbyname(strSMTP.c_str());
 	memcpy(&their_addr.sin_addr.S_un.S_addr, hptr->h_addr_list[0], hptr->h_length);
-
+	printf("%s", inet_ntoa(their_addr.sin_addr));
 	sockfd = OpenSocket((struct sockaddr *)&their_addr);
 	memset(rbuf, 0, 1500);
 	while (recv(sockfd, rbuf, 1500, 0) == 0)
@@ -145,11 +146,26 @@ void CEmailReporter::Report(std::string strText)
 
 	// EHLO
 	memset(buf, 0, 1500);
-	sprintf_s(buf, 1500, "EHLO HYL-PC\r\n");
+	sprintf_s(buf, 1500, "EHLO AO\r\n");
 	send(sockfd, buf, strlen(buf), 0);
 	memset(rbuf, 0, 1500);
 	recv(sockfd, rbuf, 1500, 0);
 	cout << "EHLO REceive: " << rbuf << endl;
+
+	// AUTH LOGIN
+	memset(buf, 0, 1500);
+	sprintf_s(buf, 1500, "AUTH LOGIN\r\n");
+	send(sockfd, buf, strlen(buf), 0);
+	memset(rbuf, 0, 1500);
+	recv(sockfd, rbuf, 1500, 0);
+	cout << "Auth Login Receive: " << rbuf << endl;
+
+	memset(buf, 0, 1500); 
+	sprintf_s(buf, 1500, "STARTTLS\r\n");
+	send(sockfd, buf, strlen(buf), 0);
+	memset(rbuf, 0, 1500);
+	recv(sockfd, rbuf, 1500, 0);
+	cout << buf << endl;
 
 	// AUTH LOGIN
 	memset(buf, 0, 1500);
@@ -296,3 +312,10 @@ void CEmailReporter::AfterReport()
 		&pi
 		);
 }
+/*
+Exchange
+cjmlyiluvxpsbifg
+
+IMAP
+thbiagefszqobgii
+*/

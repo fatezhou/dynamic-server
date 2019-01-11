@@ -30,7 +30,7 @@ void Config::Load()
 	GetPrivateProfileStringA("set", "fliter", "", sz, 1024, strPath.c_str());
 	strFilterDir = sz;
 
-	GetPrivateProfileStringA("set", "smtp", "smtp.qq.com", sz, 1024, strPath.c_str());
+	GetPrivateProfileStringA("set", "smtp", "smtp.exmail.qq.com", sz, 1024, strPath.c_str());
 	strSMTP = sz;
 
 	GetPrivateProfileStringA("set", "cmd", "", sz, 1024, strPath.c_str());
