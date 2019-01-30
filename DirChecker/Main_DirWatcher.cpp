@@ -116,24 +116,20 @@ private:
 
 int main(){
 	cfg.Load();
-	CEmailReporter* pEmailReport = new CEmailReporter;
-	//pEmailReport->SetUserInfo("81758624@qq.com", "thbiagefszqobgii", "smtp.qq.com");
-	pEmailReport->SetUserInfo(cfg.GetUser().c_str(), "thbiagefszqobgii"/*cfg.GetPassword().c_str()*/, "smtp.qq.com"/*cfg.GetSMTP().c_str()*/);
-	pEmailReport->AddToReportAddr("81758624@qq.com");
+
+	CCallSharpReport* pCallSharpReport = new CCallSharpReport;
 	vector<string> vecEmails = cfg.GetEmails();
 	for (auto iter = vecEmails.begin(); iter != vecEmails.end(); iter++){
-		pEmailReport->AddToReportAddr(iter->c_str());
-	}
-	pEmailReport->Report("for test");
+		printf("%s\n", iter->c_str());
+		pCallSharpReport->AddToReportAddr(iter->c_str());
+	}	
 /*
 	pEmailReport->AddToReportAddr("927136570@qq.com");
 	pEmailReport->AddToReportAddr("1490533119@qq.com");
 	pEmailReport->AddToReportAddr("516039216@qq.com");
 	*///pEmailReport->Report("<h1>这是一封测试用的邮件</h1>");
 	CMyWatcher* pWatcher = new CMyWatcher;
-	pWatcher->SetReporter(pEmailReport);
-	printf("setReporter finish");
+	pWatcher->SetReporter(pCallSharpReport);
 	pWatcher->Watch(cfg.GetDir().c_str());
-	printf("Watch finish");
-	return system("pause");		 
+	return 0;		 
 }

@@ -44,9 +44,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\code_store\dynamic-server\DirChecker\mysql\include;D:\code_store\dynamic-server\DirChecker\mysql\include\cppconn;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\code_store\dynamic-server\DirChecker\mysql\include;D:\code_store\dynamic-server\DirChecker\mysql\include\cppconn;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,13 +82,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
+    <ClInclude Include="DatabaseAPI.h" />
+    <ClInclude Include="dbiConfig.h" />
     <ClInclude Include="DirWatcher.h" />
+    <ClInclude Include="MYSQL_API.h" />
     <ClInclude Include="Reporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DatabaseAPI.cpp" />
     <ClCompile Include="DirWatcher.cpp" />
     <ClCompile Include="Main_DirWatcher.cpp" />
+    <ClCompile Include="MYSQL_API.cpp" />
     <ClCompile Include="Reporter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

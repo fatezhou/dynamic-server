@@ -111,6 +111,38 @@ IReporter::~IReporter()
 
 
 
+void IReporter::AddToReportAddr(const char* pEmailAddredss)
+{
+	vecEmail.push_back(pEmailAddredss);
+}
+
+void IReporter::SetCmdAfterReport(const std::string& strCmd)
+{
+	this->strCmd = strCmd;
+}
+
+void IReporter::AfterReport()
+{
+	if (strCmd.empty()){
+		return;
+	}
+
+	STARTUPINFOA si = { 0 };
+	PROCESS_INFORMATION pi = { 0 };
+
+	string strProcess = "cmd /c ";
+	strProcess += GetDir().c_str();
+	strProcess += "\\" + strCmd;
+
+	CreateProcessA(NULL,
+		(char*)strProcess.c_str(),
+		NULL, NULL, false,
+		0, NULL, NULL,
+		&si,
+		&pi
+		);
+}
+
 CEmailReporter::CEmailReporter() : IReporter()
 {
 	WSADATA WSAData;
@@ -281,37 +313,6 @@ void CEmailReporter::SetUserInfo(const char* pUser, const char* pPassword, const
 	strSMTP = pSmtp;
 }
 
-void CEmailReporter::AddToReportAddr(const char* pEmailAddredss)
-{
-	vecEmail.push_back(pEmailAddredss);
-}
-
-void CEmailReporter::SetCmdAfterReport(const std::string& strCmd)
-{
-	this->strCmd = strCmd;
-}
-
-void CEmailReporter::AfterReport()
-{
-	if (strCmd.empty()){
-		return;
-	}
-
-	STARTUPINFOA si = { 0 };
-	PROCESS_INFORMATION pi = { 0 };
-
-	string strProcess = "cmd /c ";
-	strProcess += GetDir().c_str();
-	strProcess += "\\" + strCmd;
-
-	CreateProcessA(NULL,
-		(char*)strProcess.c_str(),
-		NULL, NULL, false,
-		0, NULL, NULL,
-		&si,
-		&pi
-		);
-}
 /*
 Exchange
 cjmlyiluvxpsbifg
@@ -319,3 +320,42 @@ cjmlyiluvxpsbifg
 IMAP
 thbiagefszqobgii
 */
+
+void CCallSharpReport::Report(std::string strText)
+{
+	printf("emails:%d", vecEmail.size());
+	if (this->strMail.empty()){
+		for (auto iter = vecEmail.begin(); iter != vecEmail.end(); iter++){
+			string strOneAddr = "\"";
+			strOneAddr += iter->c_str();
+			strOneAddr += "\" ";
+			this->strMail += strOneAddr;
+		}
+	}
+
+	static string strPath;
+	if (strPath.empty()){
+		char sz[1024] = "";
+		GetModuleFileNameA(NULL, sz, 1024);
+		char* p = strrchr(sz, '\\');
+		*p = 0;
+		strcat(sz, "\\mail-sender.exe");
+		strPath = sz;
+	}
+
+	string strCmd = strPath + " \"";
+	strCmd += strText + "\" ";
+	strCmd += strMail;
+
+	STARTUPINFOA si = { 0 };
+	PROCESS_INFORMATION pi = { 0 };
+
+	printf("report cmd [%s]", strCmd.c_str());
+	CreateProcessA(NULL,
+		(char*)strCmd.c_str(),
+		NULL, NULL, false,
+		0, NULL, NULL,
+		&si,
+		&pi
+		);
+}

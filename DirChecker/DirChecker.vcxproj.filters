@@ -24,6 +24,15 @@
     <ClInclude Include="Reporter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DatabaseAPI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dbiConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MYSQL_API.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirWatcher.cpp">
@@ -36,6 +45,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Reporter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseAPI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MYSQL_API.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
