@@ -5,9 +5,26 @@
 #include <windows.h>
 #include "Reporter.h"
 #include "Config.h"
+#include "DatabaseAPI.h"
 
+const char* pPayText = "支付码可能被修改";
+const char* pDbConnectFail = "数据库可能连不上";
 
 Config cfg;
+std::string GetTimeStr(){
+	SYSTEMTIME sysTime;
+	GetLocalTime(&sysTime);
+	char szTime[128] = "";
+	sprintf(szTime, "[%04d/%02d/%02d][%02d:%02d:%02d]",
+		sysTime.wYear,
+		sysTime.wMonth,
+		sysTime.wDay,
+		sysTime.wHour,
+		sysTime.wMinute,
+		sysTime.wSecond
+		);
+	return szTime;
+};
 
 class CMyWatcher : public CDirWatcher{
 public:
@@ -58,7 +75,7 @@ public:
 		if (bShouldBeReport){
 			bShouldBeReport = false; 
 			int nSize = 0;
-			int nMaxSize = 50;
+			int nMaxSize = 10;
 			nSize = vec.size();
 			int nDeleteCount = nSize - nMaxSize;
 			auto iter = vec.begin();
@@ -84,22 +101,6 @@ public:
 			pSelf->ToReport();
 		}
 	};
-
-	std::string GetTimeStr(){
-		SYSTEMTIME sysTime;
-		GetLocalTime(&sysTime);
-		char szTime[128] = "";
-		sprintf(szTime, "[%04d/%02d/%02d][%02d:%02d:%02d]",
-			sysTime.wYear,
-			sysTime.wMonth,
-			sysTime.wDay,
-			sysTime.wHour,
-			sysTime.wMinute,
-			sysTime.wSecond
-			);
-		return szTime;
-	};
-
 private:
 	void Push(const char* pText){
 		::EnterCriticalSection(&cs);
@@ -114,7 +115,66 @@ private:
 	IReporter* pReporter;
 };
 
+void TestSQL(){
+	ZoyeeUtils::IDatabaseAPI* db = ZoyeeUtils::CreateDatabaseAPI(ZoyeeUtils::type_mysql);
+	db->Open("127.0.0.1:3307", "we7", "we7", "123456aa");
+	TableString table = db->Query("select appid from ims_zh_jdgjb_system where id = 1");
+	for (int i = 0; i < table.size(); i++){
+		printf("[%s]\n", table[i][0].c_str());
+	}
+};
+
+class CDataBaseChecker{
+public:
+	static void Run(void* pDataBaseChecker){
+		CDataBaseChecker* pThis = (CDataBaseChecker*)pDataBaseChecker;
+		pThis->DoChecker();
+	};
+
+	void DoChecker(){
+		db = ZoyeeUtils::CreateDatabaseAPI(ZoyeeUtils::type_mysql);
+		pCallSharpReport = new CCallSharpReport;
+		vector<string> vecEmails = cfg.GetEmails();
+		char sz[1024] = { 0 };
+		for (auto iter = vecEmails.begin(); iter != vecEmails.end(); iter++){
+			printf("%s\n", iter->c_str());
+			pCallSharpReport->AddToReportAddr(iter->c_str());			
+		}
+		if (db->Open("127.0.0.1:3307", "we7", "we7", "123456aa") == false){
+			sprintf(sz, "[%s]%s", GetTimeStr().c_str(), pDbConnectFail);
+			pCallSharpReport->Report(sz);
+			return;
+		}
+		printf("connect db ok\n");
+		//G54gDF5r54dsfg45DS4DF45FSdf465FS
+		string strDbPayCode;
+		string strRightPayCode = "G54gDF5r54dsfg45DS4DF45FSdf465FS";
+		const char* pSql = "select wxkey from ims_zh_jdgjb_system where id = 1";
+		while (1){
+			Sleep(5000);
+			TableString table = db->Query(pSql);
+			if (table.size() < 1){
+				continue;
+			}
+			strDbPayCode = table[0][0].c_str();			
+			printf("[%s]%s", GetTimeStr().c_str(), strDbPayCode.c_str());
+			if (strDbPayCode == strRightPayCode){
+				continue;
+			}
+			sprintf(sz, "[%s]%s", GetTimeStr().c_str(), pPayText);
+			pCallSharpReport->Report(sz);
+		}
+	}
+
+	void Start(){
+		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Run, this, 0, 0);
+	};
+	ZoyeeUtils::IDatabaseAPI* db;
+	CCallSharpReport* pCallSharpReport;
+};
+
 int main(){
+
 	cfg.Load();
 
 	CCallSharpReport* pCallSharpReport = new CCallSharpReport;
@@ -123,11 +183,8 @@ int main(){
 		printf("%s\n", iter->c_str());
 		pCallSharpReport->AddToReportAddr(iter->c_str());
 	}	
-/*
-	pEmailReport->AddToReportAddr("927136570@qq.com");
-	pEmailReport->AddToReportAddr("1490533119@qq.com");
-	pEmailReport->AddToReportAddr("516039216@qq.com");
-	*///pEmailReport->Report("<h1>这是一封测试用的邮件</h1>");
+	CDataBaseChecker* pDbChecker = new CDataBaseChecker;
+	pDbChecker->Start();
 	CMyWatcher* pWatcher = new CMyWatcher;
 	pWatcher->SetReporter(pCallSharpReport);
 	pWatcher->Watch(cfg.GetDir().c_str());

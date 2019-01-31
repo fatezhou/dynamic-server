@@ -10,6 +10,7 @@ ZoyeeUtils::CMysqlAPI::~CMysqlAPI()
 bool ZoyeeUtils::CMysqlAPI::Open(CSTR& strSrc, CSTR& strDatabase, CSTR& strUser, CSTR& strPassword)
 {
 	if ( ! mysql_init(&m_mysql)){
+		printf("mysql_init fail\n");
 		return false;			 
 	}
 	char szIP[32];
@@ -18,9 +19,11 @@ bool ZoyeeUtils::CMysqlAPI::Open(CSTR& strSrc, CSTR& strDatabase, CSTR& strUser,
 	*p = 0;	
 	int nPort = atoi(++p);
 	if ( ! mysql_real_connect(&m_mysql, szIP, strUser.c_str(), strPassword.c_str(), strDatabase.c_str(), nPort, 0, 0)){
+		printf("mysql_real_connect fail\n");
 		return false;
 	}
-	return (bIsOpen == true);
+	printf("CMysqlAPI::Open ok\n");
+	return (bIsOpen = true);
 }
 
 void ZoyeeUtils::CMysqlAPI::Close()
